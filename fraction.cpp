@@ -1,18 +1,19 @@
 #include "fraction.h"
 
-fraction::fraction(int64_t _numerator, int64_t _denominator) {
-	if (_denominator <= 0) {
+fraction::fraction(int64_t n, int64_t d) {
+	if (d <= 0) {
 		fprintf(stderr, "Error: Please ensure denominator is non-zero and positive\n");
 		fprintf(stderr, "To indicate negation please use numerator\n");
 		exit(EXIT_FAILURE);
 	}
-	numerator = _numerator;
-	denominator = _denominator;
+	numerator = n;
+	denominator = d;
 }
 
 fraction::~fraction() {
+
 }
-;
+
 inline void fraction::ensureMax(int64_t &n, int64_t &d) const {
 	if(d > n) {
 		int64_t temp = n;
@@ -20,6 +21,7 @@ inline void fraction::ensureMax(int64_t &n, int64_t &d) const {
 		d = temp;
 	}
 }
+
 int64_t fraction::get_gcd(int64_t n, int64_t d) const {
 	ensureMax(n, d);
 	uint64_t r;
@@ -70,7 +72,7 @@ fraction fraction::operator - (const fraction &f) const {
 	}
 }
 
-fraction fraction::reduce() {
+fraction & fraction::reduce() {
 	int64_t gcd= get_gcd((numerator < 0) ? -numerator : numerator, denominator);
 	numerator /= gcd;
 	denominator /= gcd;

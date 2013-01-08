@@ -13,7 +13,8 @@ class fraction {
 	public:
 		fraction(int64_t n, int64_t d);
 
-		fraction reduce();
+		fraction & reduce();
+
 		fraction getReduced() const;
 
 		fraction operator * (const fraction &f) const;
