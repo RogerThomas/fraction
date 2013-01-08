@@ -10,6 +10,9 @@ fraction::fraction(int64_t _numerator, int64_t _denominator) {
 	denominator = _denominator;
 }
 
+fraction::~fraction() {
+}
+;
 inline void fraction::ensureMax(int64_t &n, int64_t &d) const {
 	if(d > n) {
 		int64_t temp = n;
@@ -32,24 +35,20 @@ int64_t fraction::get_lcm(int64_t d1, int64_t d2) const {
 	return d1 * d2 / get_gcd(d1, d2);
 }
 
-fraction fraction::multiply(const fraction &f) const {
+fraction fraction::operator * (const fraction &f) const {
 	return fraction(numerator * f.numerator, denominator * f.denominator).reduce();
 }
 
-fraction fraction::operator*(const fraction &f) const {
-	//return fraction(numerator * f.numerator, denominator * f.denominator).reduce();
-	return multiply(f);
-}
-
-fraction fraction::divide(const fraction &f) const {
+fraction fraction::operator / (const fraction &f) const {
 	if (f.numerator < 0) {
+		//Multiply above and below by -1 to ensure resulting minus is expressed in nuerator
 		return fraction(numerator * -f.denominator, denominator * -f.numerator).reduce();
 	} else {
 		return fraction(numerator * f.denominator, denominator * f.numerator).reduce();
 	}
 }
 
-fraction fraction::add(const fraction &f) const {
+fraction fraction::operator + (const fraction &f) const {
 	if(denominator == f.denominator) {
 		return fraction(numerator + f.numerator, denominator);
 	} else {
@@ -60,7 +59,7 @@ fraction fraction::add(const fraction &f) const {
 	}
 }
 
-fraction fraction::subtract(const fraction &f) const {
+fraction fraction::operator - (const fraction &f) const {
 	if(denominator == f.denominator) {
 		return fraction(numerator - f.numerator, denominator);
 	} else {
@@ -83,17 +82,17 @@ fraction fraction::getReduced() const {
 	return fraction(numerator / gcd, denominator / gcd);
 }
 
-bool fraction::isEqual(const fraction &f) const {
+bool fraction::operator == (const fraction &f) const {
 	fraction f1 = this->getReduced();
 	fraction f2 = f.getReduced();
 	return (f1.numerator == f2.numerator && f1.denominator == f2.denominator);
 }
 
-bool fraction::notEqual(const fraction &f) const {
-	return !this->isEqual(f);
+bool fraction::operator != (const fraction &f) const {
+	return !(*(this) == f);
 }
 
-bool fraction::isGreater(const fraction &f) const {
+bool fraction::operator > (const fraction &f) const {
 	if (denominator == f.denominator) {
 		return numerator > f.numerator;
 	} else {
@@ -104,13 +103,47 @@ bool fraction::isGreater(const fraction &f) const {
 	}
 }
 
+bool fraction::operator < (const fraction &f) const {
+	if (denominator == f.denominator) {
+		return numerator < f.numerator;
+	} else {
+		int64_t lcm = get_lcm(denominator, f.denominator);
+		int64_t n1 = numerator * (lcm / denominator);
+		int64_t n2 = f.numerator * (lcm / f.denominator);
+		return n1 < n2;
+	}
+}
+
+bool fraction::operator >= (const fraction &f) const {
+	if (denominator == f.denominator) {
+		return numerator >= f.numerator;
+	} else {
+		int64_t lcm = get_lcm(denominator, f.denominator);
+		int64_t n1 = numerator * (lcm / denominator);
+		int64_t n2 = f.numerator * (lcm / f.denominator);
+		return n1 >= n2;
+	}
+}
+
+bool fraction::operator <= (const fraction &f) const {
+	if (denominator == f.denominator) {
+		return numerator <= f.numerator;
+	} else {
+		int64_t lcm = get_lcm(denominator, f.denominator);
+		int64_t n1 = numerator * (lcm / denominator);
+		int64_t n2 = f.numerator * (lcm / f.denominator);
+		return n1 <= n2;
+	}
+}
+
 double fraction::toDouble() const {
 	return (double)numerator / (double)denominator;
 }
 
-ostream& operator<<(ostream &out, const fraction &f) {
+ostream& operator << (ostream &out, const fraction &f) {
 	out << f.numerator << " / " << f.denominator;
 }
+
 string fraction::toText() const {
 	ostringstream num;
 	ostringstream den;

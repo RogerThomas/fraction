@@ -14,7 +14,35 @@ int main() {
 
 	fraction a(genRand(100), genRand(100));
 	fraction b(genRand(100), genRand(100));
-	cout << "a = " << a.toText() << ", b = " << b.toText() << endl;
+
+	fraction f1(2, 6);
+	fraction f2(4, 12);
+
+	cout << "a = " << a << ", b = " << b << endl;
+	cout << "f1 = " << f1 << ", f2 = " << f2 << endl;
+
+	cout << "a + b = " << a + b << endl;
+	cout << "a - b = " << a - b << endl;
+	cout << "a * b = " << a * b << endl;
+	cout << "a / b = " << a / b << endl;
+
+	if (f1 == f2) 
+		cout << "f1 does equal f2\n";
+	
+	if (a != b) 
+		cout << "a does not equal b\n";
+
+	if (a > b)
+		cout << "a is greater than b\n";
+
+	if (b < a)
+		cout << "b is less than a\n";
+
+	if (f1 <= f2)
+		cout << "f1 is less than or equal to f2\n";
+
+	if (f1 >= f2)
+		cout << "f1 is greater than or equal to f2\n";
 
 	clock_t t1, t2;
 	int amount = 1000000;
@@ -24,14 +52,6 @@ int main() {
 
 	cout << "Operator took " << (double)(t2 - t1) / ((double)CLOCKS_PER_SEC) << endl;
 
-	t1 = clock();
-	for(int i = 0; i < amount; i++) {a.multiply(b);}
-	t2 = clock();
-
-	cout << "Function took " << (double)(t2 - t1) / ((double)CLOCKS_PER_SEC) << endl;
-
-	cout << "Value = " << a.multiply(b).toText() << endl;
-	cout << "Value = " << (a * b).toText() << endl;
 	cout << "Value = " << a * b << endl;
 	return 1;
 }
