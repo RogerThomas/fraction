@@ -8,7 +8,6 @@ using namespace std;
 int genRand(int max) {
 	return ((double)rand() / (double)RAND_MAX) * max + 1;
 }
-//sda
 int main() {
 	//srand(time(NULL));
 	srand(42);
