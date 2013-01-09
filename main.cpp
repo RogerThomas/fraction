@@ -83,6 +83,7 @@ int main(int argc, char *argv[]) {
 	cout << "f2 = " << f2 << endl;
 	f2.reduce();
 	cout << "f2 = " << f2 << endl << endl;
-	timeOperators(argc > 1 ? atoi(argv[1]) : 100000, a, b);
+	cout << "_f1 = " << f1.toText() << endl << endl;
+	timeOperators(argc > 1 ? atoi(argv[1]) : 1000000, a, b);
 	return 1;
 }

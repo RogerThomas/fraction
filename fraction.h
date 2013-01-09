@@ -41,10 +41,10 @@ class fraction {
 
 		~fraction();
 	private:
-		void ensureMax(int64_t &, int64_t &) const;
+		static void ensureMax(int64_t &, int64_t &);
 
-		int64_t get_gcd(int64_t n, int64_t d) const;
-		int64_t get_lcm(int64_t d1, int64_t d2) const;
+		static int64_t getGcd(int64_t n, int64_t d);
+		static int64_t getLcm(int64_t d1, int64_t d2);
 
 		int64_t numerator;
 		int64_t denominator;
