@@ -1,0 +1,6 @@
+There are a number of improvements that I would make to the fraction class
+that would take more time, these are listed below.
+
+1. The addition, subtraction, multiplication and division operators could also
+be written as mutable operations. For example one might want the following 
+member function: multiplyBy(int64_t val) as well as 

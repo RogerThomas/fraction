@@ -11,7 +11,9 @@ using namespace std;
 
 class fraction {
 	public:
+		fraction() : numerator(1), denominator(1) {};
 		fraction(int64_t n, int64_t d);
+		~fraction();
 
 		fraction & reduce();
 
@@ -19,8 +21,11 @@ class fraction {
 
 		fraction operator * (const fraction &f) const;
 		fraction operator / (const fraction &f) const;
-		fraction operator + (const fraction &f) const;
+		const fraction operator + (const fraction &f) const;
 		fraction operator - (const fraction &f) const;
+		
+		fraction & multiplyBy(int64_t val);
+		fraction & multiplyBy(const fraction &val);
 
 		bool operator == (const fraction &f) const;
 		bool operator != (const fraction &f) const;
@@ -37,14 +42,10 @@ class fraction {
 
 		void display() const;
 
-		friend ostream& operator<<(ostream& out, const fraction& f);
+		friend ostream & operator << (ostream &out, const fraction &f);
 
-		~fraction();
 	private:
-		static void ensureMax(int64_t &, int64_t &);
-
 		static int64_t getGcd(int64_t n, int64_t d);
-		static int64_t getLcm(int64_t d1, int64_t d2);
 
 		int64_t numerator;
 		int64_t denominator;

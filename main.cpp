@@ -50,7 +50,10 @@ void timeOperators(int64_t iters, const fraction &f1, const fraction &f2) {
 
 int main(int argc, char *argv[]) {
 	srand(42);
-
+	fraction f(84375, 100000);
+	f.reduce();
+	cout << "f === " << f << endl;
+	return 1;
 	fraction a(genRand(100), genRand(100));
 	fraction b(genRand(100), genRand(100));
 

@@ -1,17 +1,22 @@
 CC=g++
-CFLAGS=-O3 -Wall
-MAIN=main.cpp
-SOURCES=fraction.cpp
-OBJECTS=$(SOURCES:.cpp=.o) $(MAIN:.cpp=.o)
+CFLAGS=-c -O3 -Wall
 TARGET=main
+CLASSES=fraction.cpp
+SOURCES= $(CLASSES) $(TARGET).cpp
+OBJECTS=$(SOURCES:.cpp=.o)
+CLASSOBJECTS=$(CLASSES:.cpp=.o)
 
-ALL: $(SOURCES) $(TARGET)
+all: $(SOURCES) $(TARGET)
 
 $(TARGET): $(OBJECTS)
-	$(CC) $(OBJECTS) $(CFLAGS) -o $@ 
+	$(CC) $(OBJECTS) -o $@ 
 
-$(TARGET): $(SOURCES)
-$(OBJECTS): $(SOURCES:.cpp=.h)
+.cpp.o:
+	$(CC) $(CFLAGS) $< -o $@
+
+
+$(TARGET).o: Makefile
+$(CLASSOBJECTS): $(CLASSES:.cpp=.h) Makefile
 
 
 .PHONY: clean
