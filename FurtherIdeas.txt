@@ -1,6 +1,24 @@
-There are a number of improvements that I would make to the fraction class
-that would take more time, these are listed below.
+There are a number of improvements/ideas that I would make to the fraction 
+class that would take longer to implement, these are listed below.
 
 1. The addition, subtraction, multiplication and division operators could also
 be written as mutable operations. For example one might want the following 
-member function: multiplyBy(int64_t val) as well as 
+member function: multiplyBy(int64_t val), which would multiple the fractions'
+numerator, in place, by val. One might also want multiplyBy(const fraction &f) 
+which would multiply, in place, the fraction by f.
+
+2. Integer overflow detection would be an important addition to the fraction
+class, as every operator associated with the fraction class is currently 
+vulnerable to undetected integer overflow.
+
+3. It might be an interesting exercise to implement some algorithms using
+fractions. For example, an idea might be to implement an algorithm that would
+calculate the best rational approximation to a real number, perhaps even
+constrained to a given maximum denominator value. An algorithm to calculate 
+the continued fraction form to at most n values of a real number could also
+be implemented.
+
+4. Combining ideas 1 and 3 then, one could implement the operaions described
+in idea 1 where the argument is a real floating point number which could then
+be converted to a fraction, possibly subject to a denominator constraint,
+with the resulting operation carried out appropriately.

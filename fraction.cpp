@@ -1,6 +1,6 @@
 #include "fraction.h"
 
-fraction::fraction(int64_t n, int64_t d) {
+fraction::fraction(int64_t n, int64_t d) : defaultMaxDen(1000) {
 	if (d == 0) {
 		fprintf(stderr, "Error: Please ensure denominator is non-zero\n");
 		exit(EXIT_FAILURE);
@@ -25,6 +25,11 @@ fraction & fraction::reduce() {
 	return *this;
 }
 
+fraction & fraction::setNumerator(int64_t n) {
+	numerator = n;
+	return *this;
+}
+
 fraction fraction::getReduced() const {
 	int64_t gcd = getGcd((numerator < 0) ? -numerator : numerator, denominator);
 	return fraction(numerator / gcd, denominator / gcd);
@@ -43,7 +48,7 @@ fraction fraction::operator / (const fraction &f) const {
 	}
 }
 
-const fraction fraction::operator + (const fraction &f) const {
+fraction fraction::operator + (const fraction &f) const {
 	if(denominator == f.denominator) {
 		return fraction(numerator + f.numerator, denominator);
 	} else {
@@ -63,6 +68,38 @@ fraction fraction::operator - (const fraction &f) const {
 	}
 }
 
+fraction fraction::operator * (const double d) const {
+	return (*this * getBestRA(d, defaultMaxDen));
+}
+
+fraction fraction::operator / (const double d) const {
+	return (*this / getBestRA(d, defaultMaxDen));
+}
+
+fraction fraction::operator + (const double d) const {
+	return (*this + getBestRA(d, defaultMaxDen));
+}
+
+fraction fraction::operator - (const double d) const {
+	return (*this - getBestRA(d, defaultMaxDen));
+}
+
+fraction fraction::getBestRA(double x, const int64_t maxDen) {
+	int8_t multiplier = 1;
+	if (x < 0) {
+		x = -x;
+		multiplier = -1;
+	}
+	if (x > 1) {
+		int64_t add = floor(x);
+		x = x - add;
+		fraction ret = bestRA(x, maxDen);
+		return ret.setNumerator(multiplier * (ret.numerator + ret.denominator * add));
+	} else {
+		return bestRA(x, maxDen);
+	}
+}
+
 bool fraction::operator == (const fraction &f) const {
 	fraction f1 = this->getReduced();
 	fraction f2 = f.getReduced();
@@ -75,46 +112,46 @@ bool fraction::operator != (const fraction &f) const {
 
 bool fraction::operator > (const fraction &f) const {
 	if (denominator == f.denominator) {
-		return numerator > f.numerator;
+		return (numerator > f.numerator);
 	} else {
 		int64_t n1 = numerator * f.denominator;
 		int64_t n2 = f.numerator * denominator;
-		return n1 > n2;
+		return (n1 > n2);
 	}
 }
 
 bool fraction::operator < (const fraction &f) const {
 	if (denominator == f.denominator) {
-		return numerator < f.numerator;
+		return (numerator < f.numerator);
 	} else {
 		int64_t n1 = numerator * f.denominator;
 		int64_t n2 = f.numerator * denominator;
-		return n1 < n2;
+		return (n1 < n2);
 	}
 }
 
 bool fraction::operator >= (const fraction &f) const {
 	if (denominator == f.denominator) {
-		return numerator >= f.numerator;
+		return (numerator >= f.numerator);
 	} else {
 		int64_t n1 = numerator * f.denominator;
 		int64_t n2 = f.numerator * denominator;
-		return n1 >= n2;
+		return (n1 >= n2);
 	}
 }
 
 bool fraction::operator <= (const fraction &f) const {
 	if (denominator == f.denominator) {
-		return numerator <= f.numerator;
+		return (numerator <= f.numerator);
 	} else {
 		int64_t n1 = numerator * f.denominator;
 		int64_t n2 = f.numerator * denominator;
-		return n1 <= n2;
+		return (n1 <= n2);
 	}
 }
 
 double fraction::toDouble() const {
-	return (double) numerator / (double) denominator;
+	return ((double) numerator / (double) denominator);
 }
 
 ostream & operator << (ostream &out, const fraction &f) {
@@ -132,6 +169,10 @@ void fraction::display() const {
 	cout << toText() << endl;
 }
 
+/*
+* ----------------------------Private methods---------------------------------
+*/
+
 int64_t fraction::getGcd(int64_t n, int64_t d) {
 	if(d > n) {
 		int64_t temp = n;
@@ -147,3 +188,33 @@ int64_t fraction::getGcd(int64_t n, int64_t d) {
 	return n;
 }
 
+fraction fraction::bestRA(const double x, const int64_t maxDen) {
+	fraction a(0, 1);
+	fraction b(1, 1);
+	fraction temp;
+
+	double mid = 0.0;
+
+	while ((a.denominator <= maxDen) && (b.denominator <= maxDen)) {
+		temp = fraction(a.numerator + b.numerator, a.denominator + b.denominator);
+		mid = temp.toDouble();
+		if (x == mid) {
+			if (temp.denominator <= maxDen) {
+				return temp;
+			} else if (b.denominator > a.denominator) {
+				return b;
+			} else {
+				return a;
+			}
+		} else if (x > mid) {
+			a = temp;
+		} else {
+			b = temp;
+		}
+	}
+	if (a.denominator > maxDen) {
+		return b;
+	} else {
+		return a;
+	}
+}

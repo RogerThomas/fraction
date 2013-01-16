@@ -1,8 +1,8 @@
 #include <iostream>
+#include "fraction.h"
 #include <sys/time.h>
 #include <sys/resource.h>
 #include <time.h>
-#include "fraction.h"
 
 using namespace std;
 
@@ -10,12 +10,7 @@ int genRand(int max) {
 	return ((double)rand() / (double)RAND_MAX) * max + 1;
 }
 
-double genRandDouble(double max) {
-	return ((double)rand() / (double)RAND_MAX) * max + 1;
-}
-
-template <typename T>
-double iterate(const char op, const int64_t iters, const fraction &f1, const T &f2) {
+double iterate(char op, int64_t iters, const fraction &f1, const fraction &f2) {
 	struct timeval timer1, timer2;
 	gettimeofday(&timer1, NULL);
 	switch (op) {
@@ -60,20 +55,14 @@ void timeIt() {
 
 }
 
-void timeOperators(int64_t iters, const fraction &f1, const fraction &f2, const double d) {
+void timeOperators(int64_t iters, const fraction &f1, const fraction &f2) {
 	char ops[4] = {'*', '-', '/', '+'};
 	for(int8_t i = 0; i < 4; i++) {
-		cout << iters << " iterations of " << f1 << " " << ops[i] << " ";
-		cout << f2 << " took " << iterate(ops[i], iters, f1, f2);
+		cout << iters << " iterations of " << ops[i] << " operator";
+		cout << " took " << iterate(ops[i], iters, f1, f2);
 		cout << " seconds\n";
-
-		cout << iters << " iterations of " << f1 << " " << ops[i] << " ";
-		cout << d << " took " << iterate(ops[i], iters, f1, d);
-		cout << " seconds\n";
-
 	}
 }
-
 int main(int argc, char *argv[]) {
 	struct timeval timer1, timer2;
 	gettimeofday(&timer1, NULL);
@@ -110,21 +99,18 @@ int main(int argc, char *argv[]) {
 
 	f2.reduce();
 
-	double d = genRandDouble(100.0);
-	cout << "d = " << d << endl;
+	timeOperators(argc > 1 ? atoi(argv[1]) : 10000, a, b);
+	gettimeofday(&timer2, NULL);
+	int64_t elapsedSeconds = timer2.tv_sec - timer1.tv_sec;
+	int64_t elapsedUSeconds = timer2.tv_usec - timer1.tv_usec;
 
-	timeOperators(argc > 1 ? atoi(argv[1]) : 100000, a, b, d);
-	
+	cout << "Entire program took " << (elapsedSeconds + elapsedUSeconds / 1000000.0) << endl;
+
 	struct rusage my;
 	getrusage(RUSAGE_SELF, &my);
 	cout << "Mem = " << my.ru_maxrss << endl;
 	cout << "Val = " << fraction::getBestRA(-4.152521, 50) << endl;
 
 	timeIt();
-
-	gettimeofday(&timer2, NULL);
-	int64_t elapsedSeconds = timer2.tv_sec - timer1.tv_sec;
-	int64_t elapsedUSeconds = timer2.tv_usec - timer1.tv_usec;
-	cout << "Entire program took " << (elapsedSeconds + elapsedUSeconds / 1000000.0) << endl;
 	return 0;
 }
